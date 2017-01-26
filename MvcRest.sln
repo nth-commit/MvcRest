@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{034284BB-AF58-4060-812F-D27EFB95113D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6355E4E9-C979-4544-8B88-8398A5AC883E}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NthCommit.AspNetCore.Mvc.Rest", "src\NthCommit.AspNetCore.Mvc.Rest\NthCommit.AspNetCore.Mvc.Rest.xproj", "{77CA54BF-08C5-4EFA-ACCE-A3BD8F533155}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NthCommit.AspNetCore.Mvc.Rest.Sample", "src\NthCommit.AspNetCore.Mvc.Rest.Sample\NthCommit.AspNetCore.Mvc.Rest.Sample.xproj", "{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77CA54BF-08C5-4EFA-ACCE-A3BD8F533155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77CA54BF-08C5-4EFA-ACCE-A3BD8F533155}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77CA54BF-08C5-4EFA-ACCE-A3BD8F533155}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77CA54BF-08C5-4EFA-ACCE-A3BD8F533155}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{77CA54BF-08C5-4EFA-ACCE-A3BD8F533155} = {034284BB-AF58-4060-812F-D27EFB95113D}
+		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1} = {034284BB-AF58-4060-812F-D27EFB95113D}
+	EndGlobalSection
+EndGlobal
