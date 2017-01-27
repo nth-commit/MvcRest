@@ -16,13 +16,10 @@ namespace NthCommit.AspNetCore.Mvc.Rest
         private readonly IEnumerable<string> _allowedProperties;
         private readonly Type _type;
 
-        public OrderableAttribute(Type type, string allowedField, params string[] additionalAllowedFields)
+        public OrderableAttribute(Type type, params string[] allowedProperties)
         {
             _type = type;
-
-            var allowedFields = new List<string>() { allowedField };
-            allowedFields.AddRange(additionalAllowedFields);
-            _allowedProperties = allowedFields;
+            _allowedProperties = allowedProperties;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
@@ -33,38 +30,53 @@ namespace NthCommit.AspNetCore.Mvc.Rest
                 return;
             }
 
-            var orderValue = context.HttpContext.Request.Query.FirstOrDefaultWithKey("order");
-            if (!string.IsNullOrWhiteSpace(orderValue))
-            {
-                var descriptors = orderValue
-                    .Split(',')
-                    .Select(o => o.Trim())
-                    .Select(o =>
-                    {
-                        var descendingRequested = o.StartsWith("-");
-                        var ascendingRequested = o.StartsWith("+");
-                        var unsignedPropertyName = descendingRequested || ascendingRequested ? o.Substring(1) : o;
-                        return new OrderDescriptor(
-                            _allowedProperties
-                                .Where(p => p.ToLowerInvariant() == unsignedPropertyName.ToLowerInvariant())
-                                .FirstOrDefault(),
-                            !descendingRequested
-                        );
-                    });
-
-                if (descriptors.Any(a => a.PropertyName == null))
+            var orderValue = context.HttpContext.Request.Query.FirstOrDefaultWithKey("order") ?? string.Empty;
+            var descriptors = orderValue
+                .Split(',')
+                .Select(o => o.Trim())
+                .Select(o =>
                 {
-                    context.Result = new BadRequestResult();
-                    return;
-                }
+                    var descendingRequested = o.StartsWith("-");
+                    var ascendingRequested = o.StartsWith("+");
+                    var unsignedPropertyName = descendingRequested || ascendingRequested ? o.Substring(1) : o;
+                    return new OrderDescriptor(GetPropertyName(unsignedPropertyName), !descendingRequested);
+                });
 
-                _orderRequest = new OrderRequest(_type, descriptors);
-                restController.OrderRequest = _orderRequest;
+            if (descriptors.Any(a => a.PropertyName == null))
+            {
+                context.Result = new BadRequestResult();
+                return;
             }
+
+            _orderRequest = new OrderRequest(_type, descriptors);
+            restController.OrderRequest = _orderRequest;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
+        }
+
+        private string GetPropertyName(string requestedPropertyName)
+        {
+            // TODO: Cache reflection
+            var matchedPropertyName = _type
+                .GetProperties()
+                .Where(p => p.Name.ToLowerInvariant() == requestedPropertyName)
+                .Select(p => p.Name)
+                .FirstOrDefault();
+
+            if (string.IsNullOrEmpty(matchedPropertyName))
+            {
+                return null;
+            }
+
+            if (_allowedProperties.Count() > 0 &&
+                !_allowedProperties.Any(p => p.ToLowerInvariant() == matchedPropertyName.ToLowerInvariant()))
+            {
+                return null;
+            }
+
+            return matchedPropertyName;
         }
     }
 }

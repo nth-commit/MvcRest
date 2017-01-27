@@ -6,23 +6,13 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.Rest.Includes
 {
-    public class IncludeRequest : IEnumerable<string>
+    public class IncludeRequest
     {
-        private readonly IEnumerable<string> _fields;
+        public IEnumerable<string> Properties { get; private set; }
 
-        internal IncludeRequest(IEnumerable<string> fields)
+        internal IncludeRequest(IEnumerable<string> properties)
         {
-            _fields = fields.ToArray();
-        }
-
-        public IEnumerator<string> GetEnumerator()
-        {
-            return _fields.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            Properties = properties.ToArray();
         }
     }
 }

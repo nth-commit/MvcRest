@@ -27,14 +27,10 @@ namespace NthCommit.AspNetCore.Mvc.Rest.Sample.Controllers
         [ProducesResponseType(typeof(IEnumerable<EmployeeResult>), 200)]
         [Includable]
         [Pageable]
-        [Orderable(typeof(Employee), nameof(Employee.FirstName), nameof(Employee.MiddleName), nameof(Employee.LastName))]
+        [Orderable(typeof(Employee))]
         public IActionResult List()
         {
-            var result = _employeeService.GetAllEmployees();
-            if (OrderRequest != null)
-            {
-                result = OrderRequest.Order(result);
-            }
+            var result = OrderRequest.Order(_employeeService.GetAllEmployees());
             return Ok(result, 50);
         }
 

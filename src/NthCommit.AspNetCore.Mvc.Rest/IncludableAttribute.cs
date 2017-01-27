@@ -22,19 +22,17 @@ namespace NthCommit.AspNetCore.Mvc.Rest
                 return;
             }
 
-            var fields = context.HttpContext.Request.Query.WhereHasKey("fields");
-            if (fields.Count() > 0)
-            {
-                _includeRequest = new IncludeRequest(fields
-                    .SelectMany(v => v.Split(','))
-                    .Distinct());
-                restController.IncludeRequest = _includeRequest;
-            }
+            var fields = context.HttpContext.Request.Query
+                .WhereHasKey("fields")
+                .SelectMany(v => v.Split(','))
+                .Distinct();
+            _includeRequest = new IncludeRequest(fields);
+            restController.IncludeRequest = _includeRequest;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            if (_includeRequest == null)
+            if (_includeRequest == null || _includeRequest.Properties.Count() == 0)
             {
                 return;
             }
@@ -52,7 +50,7 @@ namespace NthCommit.AspNetCore.Mvc.Rest
         private object CreateResult(object inputResult)
         {
             return inputResult.GetType().GetProperties()
-                .Where(p => _includeRequest.Contains(p.Name.ToLowerInvariant()))
+                .Where(p => _includeRequest.Properties.Contains(p.Name.ToLowerInvariant()))
                 .ToDictionary(p => p.Name, p => p.GetValue(inputResult));
         }
     }
