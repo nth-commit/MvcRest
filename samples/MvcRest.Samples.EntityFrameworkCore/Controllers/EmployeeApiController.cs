@@ -23,12 +23,23 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         
         [HttpGet]
         [Route("paged")]
-        [ProducesResponseType(typeof(Employee), 200)]
+        [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
         [Pageable(DefaultPageSize = 3, MaximumPageSize = 10)]
         public async Task<IActionResult> List_Paged()
         {
             return Ok(await _dbContext.Employees
                 .Page(PageRequest)
+                .ToListAsync());
+        }
+
+        [HttpGet]
+        [Route("ordered")]
+        [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
+        [Orderable(typeof(Employee))]
+        public async Task<IActionResult> List_Ordered()
+        {
+            return Ok(await _dbContext.Employees
+                .Order(OrderRequest)
                 .ToListAsync());
         }
     }
