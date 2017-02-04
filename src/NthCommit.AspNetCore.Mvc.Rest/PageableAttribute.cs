@@ -14,22 +14,22 @@ namespace NthCommit.AspNetCore.Mvc.Rest
 {
     public class PageableAttribute : Attribute, IActionFilter
     {
-        private const string PageNumberKey = "page";
-        private const string PageSizeKey = "page-size";
+        private const string DefaultPageNumberKey = "page";
+        private const string DefaultPageSizeKey = "page-size";
         private const int DefaultPageNumber = 1;
-        private const int DefaultMaxPageSize = 5;
-        private const int DefaultDefaultPageSize = DefaultMaxPageSize;
+        private const int DefaultDefaultPageSize = 10;
+        private const int DefaultMaxPageSize = 50;
 
-        private readonly int _maxPageSize;
-        private readonly int _defaultPageSize;
         private PageRequest _pageRequest;
 
-        public PageableAttribute(int DefaultPageSize = 0, int MaxPageSize = 0)
-        {
-            _defaultPageSize = DefaultPageSize > 0 ? DefaultPageSize : DefaultDefaultPageSize;
-            _maxPageSize = MaxPageSize > 0 ? MaxPageSize : DefaultMaxPageSize;
-            // TODO: Validate max page size
-        }
+        public int MaximumPageSize { get; set; } = DefaultMaxPageSize;
+
+        public int DefaultPageSize { get; set; } = DefaultDefaultPageSize;
+
+        public string PageNumberKey { get; set; } = DefaultPageNumberKey;
+
+        public string PageSizeKey { get; set; } = DefaultPageSizeKey;
+
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
@@ -38,18 +38,35 @@ namespace NthCommit.AspNetCore.Mvc.Rest
             {
                 return;
             }
+
+            int pageNumber;
+            var pageNumberStr = context.HttpContext.Request.Query.FirstOrDefaultWithKey(DefaultPageNumberKey);
+            if (string.IsNullOrWhiteSpace(pageNumberStr))
+            {
+                pageNumber = DefaultPageNumber;
+            }
+            else if (int.TryParse(pageNumberStr, out pageNumber))
+            {
+                if (pageNumber < 1)
+                {
+                    context.Result = new BadRequestResult();
+                    return;
+                }
+            }
+            else
+            {
+                context.Result = new BadRequestResult();
+                return;
+            }
             
-            int pageNumber = DefaultPageNumber;
-            int.TryParse(context.HttpContext.Request.Query.FirstOrDefaultWithKey(PageNumberKey), out pageNumber);
-            
-            int requestedPageSize = _defaultPageSize;
-            var requestedPageSizeStr = context.HttpContext.Request.Query.FirstOrDefaultWithKey(PageSizeKey);
+            int requestedPageSize = DefaultPageSize;
+            var requestedPageSizeStr = context.HttpContext.Request.Query.FirstOrDefaultWithKey(DefaultPageSizeKey);
             if (!string.IsNullOrWhiteSpace(requestedPageSizeStr))
             {
                 int.TryParse(requestedPageSizeStr, out requestedPageSize);
             }
 
-            if (requestedPageSize > _maxPageSize)
+            if (requestedPageSize > MaximumPageSize)
             {
                 context.Result = new BadRequestResult();
                 return;
@@ -128,8 +145,8 @@ namespace NthCommit.AspNetCore.Mvc.Rest
         {
             var request = context.HttpContext.Request;
             var requestQueryDictionary = QueryHelpers.ParseQuery(request.QueryString.Value);
-            requestQueryDictionary[PageNumberKey] = new StringValues(pageNumber.ToString());
-            requestQueryDictionary[PageSizeKey] = new StringValues(_pageRequest.Size.ToString());
+            requestQueryDictionary[DefaultPageNumberKey] = new StringValues(pageNumber.ToString());
+            requestQueryDictionary[DefaultPageSizeKey] = new StringValues(_pageRequest.Size.ToString());
             return QueryHelpers.AddQueryString(
                 new Uri($"{request.Scheme}://{request.Host}{request.Path}").ToString(),
                 requestQueryDictionary

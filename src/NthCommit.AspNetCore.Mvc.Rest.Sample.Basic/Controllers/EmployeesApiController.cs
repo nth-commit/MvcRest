@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NthCommit.AspNetCore.Mvc.Rest.Sample.Controllers.Models;
-using NthCommit.AspNetCore.Mvc.Rest.Sample.Services;
-using NthCommit.AspNetCore.Mvc.Rest.Sample.Services.Models;
+using NthCommit.AspNetCore.Mvc.Rest.Sample.Basic.Controllers.Models;
+using NthCommit.AspNetCore.Mvc.Rest.Sample.Basic.Services;
+using NthCommit.AspNetCore.Mvc.Rest.Sample.Basic.Services.Models;
 using NthCommit.AspNetCore.Mvc.Rest.Ordering;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace NthCommit.AspNetCore.Mvc.Rest.Sample.Controllers
+namespace NthCommit.AspNetCore.Mvc.Rest.Sample.Basic.Controllers
 {
     [Route("api/employees")]
     public class EmployeesApiController : RestApiController

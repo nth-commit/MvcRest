@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NthCommit.AspNetCore.Mvc.Rest.Sample.Services.Models
+namespace NthCommit.AspNetCore.Mvc.Rest.Sample.Basic.Services.Models
 {
     public class Employee
     {

@@ -12,7 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NthCommit.AspNetCore.Mvc.Rest", "src\NthCommit.AspNetCore.Mvc.Rest\NthCommit.AspNetCore.Mvc.Rest.xproj", "{77CA54BF-08C5-4EFA-ACCE-A3BD8F533155}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NthCommit.AspNetCore.Mvc.Rest.Sample", "src\NthCommit.AspNetCore.Mvc.Rest.Sample\NthCommit.AspNetCore.Mvc.Rest.Sample.xproj", "{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NthCommit.AspNetCore.Mvc.Rest.Sample.Basic", "src\NthCommit.AspNetCore.Mvc.Rest.Sample.Basic\NthCommit.AspNetCore.Mvc.Rest.Sample.Basic.xproj", "{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{5F2D0018-A06D-4AAD-8F7C-34DCA0BBE7A5}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MvcRest.Samples.EntityFrameworkCore", "samples\MvcRest.Samples.EntityFrameworkCore\MvcRest.Samples.EntityFrameworkCore.xproj", "{AF641F55-57F3-4B70-BAD1-4120E48EFFDA}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MvcRest.Samples.EntityFrameworkCore.Data", "samples\MvcRest.Samples.EntityFrameworkCore.Data\MvcRest.Samples.EntityFrameworkCore.Data.xproj", "{826E65E6-6926-46E0-ABEF-814A4E428564}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +34,14 @@ Global
 		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF641F55-57F3-4B70-BAD1-4120E48EFFDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF641F55-57F3-4B70-BAD1-4120E48EFFDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF641F55-57F3-4B70-BAD1-4120E48EFFDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF641F55-57F3-4B70-BAD1-4120E48EFFDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{826E65E6-6926-46E0-ABEF-814A4E428564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{826E65E6-6926-46E0-ABEF-814A4E428564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{826E65E6-6926-46E0-ABEF-814A4E428564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{826E65E6-6926-46E0-ABEF-814A4E428564}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -35,5 +49,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{77CA54BF-08C5-4EFA-ACCE-A3BD8F533155} = {034284BB-AF58-4060-812F-D27EFB95113D}
 		{7DCFCCF5-CB2A-4AF8-9B61-9F6020FEE5C1} = {034284BB-AF58-4060-812F-D27EFB95113D}
+		{AF641F55-57F3-4B70-BAD1-4120E48EFFDA} = {5F2D0018-A06D-4AAD-8F7C-34DCA0BBE7A5}
+		{826E65E6-6926-46E0-ABEF-814A4E428564} = {5F2D0018-A06D-4AAD-8F7C-34DCA0BBE7A5}
 	EndGlobalSection
 EndGlobal

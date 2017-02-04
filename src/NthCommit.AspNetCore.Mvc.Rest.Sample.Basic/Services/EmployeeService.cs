@@ -1,10 +1,10 @@
-﻿using NthCommit.AspNetCore.Mvc.Rest.Sample.Services.Models;
+﻿using NthCommit.AspNetCore.Mvc.Rest.Sample.Basic.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NthCommit.AspNetCore.Mvc.Rest.Sample.Services
+namespace NthCommit.AspNetCore.Mvc.Rest.Sample.Basic.Services
 {
     public interface IEmployeeService
     {

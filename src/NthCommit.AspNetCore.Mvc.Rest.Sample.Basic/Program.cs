@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
-namespace NthCommit.AspNetCore.Mvc.Rest.Sample
+namespace NthCommit.AspNetCore.Mvc.Rest.Sample.Basic
 {
     public class Program
     {
