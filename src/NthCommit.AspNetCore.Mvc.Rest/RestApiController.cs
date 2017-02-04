@@ -14,6 +14,19 @@ namespace NthCommit.AspNetCore.Mvc.Rest
     {
         public object Expand { get; set; }
 
+        public RestQuery Query
+        {
+            get
+            {
+                return new RestQuery()
+                {
+                    OrderRequest = OrderRequest,
+                    IncludeRequest = IncludeRequest,
+                    PageRequest = PageRequest
+                };
+            }
+        }
+
         public OrderRequest OrderRequest { get; set; }
 
         public IncludeRequest IncludeRequest { get; set; }

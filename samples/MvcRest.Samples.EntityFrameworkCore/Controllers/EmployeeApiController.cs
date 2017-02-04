@@ -28,7 +28,7 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         public async Task<IActionResult> List()
         {
             return Ok(
-                await _dbContext.Employees.Order(OrderRequest).Page(PageRequest).ToListAsync(),
+                await _dbContext.Employees.Query(Query).ToListAsync(),
                 await _dbContext.Employees.CountAsync());
         }
 

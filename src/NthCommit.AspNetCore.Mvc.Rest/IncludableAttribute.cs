@@ -12,8 +12,6 @@ namespace NthCommit.AspNetCore.Mvc.Rest
 {
     public class IncludableAttribute : Attribute, IActionFilter
     {
-        private IncludeRequest _includeRequest;
-
         public void OnActionExecuting(ActionExecutingContext context)
         {
             var restController = context.Controller as RestApiController;
@@ -23,32 +21,11 @@ namespace NthCommit.AspNetCore.Mvc.Rest
             }
 
             var fields = context.HttpContext.Request.Query.GetQueryValues("fields");
-            _includeRequest = new IncludeRequest(fields);
-            restController.IncludeRequest = _includeRequest;
+            restController.IncludeRequest = new IncludeRequest(fields);
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            if (_includeRequest == null || _includeRequest.Properties.Count() == 0)
-            {
-                return;
-            }
-
-            var okObjectResult = context.Result as OkObjectResult;
-            if (okObjectResult != null)
-            {
-                var value = okObjectResult.Value;
-                var enumerable = value as IEnumerable<object>;
-                var newValue = enumerable == null ? CreateResult(value) : enumerable.Select(o => CreateResult(o));
-                okObjectResult.Value = newValue;
-            }
-        }
-
-        private object CreateResult(object inputResult)
-        {
-            return inputResult.GetType().GetProperties()
-                .Where(p => _includeRequest.Properties.Contains(p.Name.ToLowerInvariant()))
-                .ToDictionary(p => p.Name, p => p.GetValue(inputResult));
         }
     }
 }
