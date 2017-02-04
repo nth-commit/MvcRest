@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.Rest.Filters
 {
-    public class FilterableData : Dictionary<string, string>
+    public class FilterRequest : Dictionary<string, string>
     {
 
-        public FilterableData()
+        public FilterRequest()
         {
             
         }

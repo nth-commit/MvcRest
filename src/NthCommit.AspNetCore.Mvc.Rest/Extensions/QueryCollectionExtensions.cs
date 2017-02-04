@@ -24,5 +24,15 @@ namespace NthCommit.AspNetCore.Mvc.Rest.Extensions
         {
             return queryCollection.WhereHasKey(key).FirstOrDefault();
         }
+
+        public static IEnumerable<string> GetQueryValues(
+            this IQueryCollection queryCollection,
+            string key,
+            char separator = ',')
+        {
+            return queryCollection.WhereHasKey(key)
+                .SelectMany(v => v.Split(separator))
+                .Distinct();
+        }
     }
 }

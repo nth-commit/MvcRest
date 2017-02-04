@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using NthCommit.AspNetCore.Mvc.Rest.Includes;
+using NthCommit.AspNetCore.Mvc.Rest.Ordering;
+using NthCommit.AspNetCore.Mvc.Rest.Pageable;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using NthCommit.AspNetCore.Mvc.Rest.Includes;
-using NthCommit.AspNetCore.Mvc.Rest.Pageable;
-using System.Collections;
-using NthCommit.AspNetCore.Mvc.Rest.Ordering;
 
 namespace NthCommit.AspNetCore.Mvc.Rest
 {

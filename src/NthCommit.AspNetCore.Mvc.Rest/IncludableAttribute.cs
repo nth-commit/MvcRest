@@ -22,10 +22,7 @@ namespace NthCommit.AspNetCore.Mvc.Rest
                 return;
             }
 
-            var fields = context.HttpContext.Request.Query
-                .WhereHasKey("fields")
-                .SelectMany(v => v.Split(','))
-                .Distinct();
+            var fields = context.HttpContext.Request.Query.GetQueryValues("fields");
             _includeRequest = new IncludeRequest(fields);
             restController.IncludeRequest = _includeRequest;
         }
