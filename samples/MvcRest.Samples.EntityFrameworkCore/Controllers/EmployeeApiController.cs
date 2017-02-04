@@ -20,7 +20,18 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         {
             _dbContext = dbContext;
         }
-        
+
+        [HttpGet]
+        [Route("")]
+        [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
+        [Pageable(DefaultPageSize = 3, MaximumPageSize = 10), Orderable, Includable]
+        public async Task<IActionResult> List()
+        {
+            return Ok(
+                await _dbContext.Employees.Order(OrderRequest).Page(PageRequest).ToListAsync(),
+                await _dbContext.Employees.CountAsync());
+        }
+
         [HttpGet]
         [Route("paged")]
         [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
@@ -39,6 +50,15 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         public async Task<IActionResult> List_Ordered()
         {
             return Ok(await _dbContext.Employees.Order(OrderRequest).ToListAsync());
+        }
+
+        [HttpGet]
+        [Route("includable")]
+        [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
+        [Includable]
+        public async Task<IActionResult> List_Includable()
+        {
+            return Ok(await _dbContext.Employees.ToListAsync());
         }
     }
 }

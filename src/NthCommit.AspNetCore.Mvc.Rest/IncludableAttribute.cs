@@ -40,7 +40,7 @@ namespace NthCommit.AspNetCore.Mvc.Rest
                 var value = okObjectResult.Value;
                 var enumerable = value as IEnumerable<object>;
                 var newValue = enumerable == null ? CreateResult(value) : enumerable.Select(o => CreateResult(o));
-                context.Result = new OkObjectResult(newValue);
+                okObjectResult.Value = newValue;
             }
         }
 
