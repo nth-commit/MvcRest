@@ -35,7 +35,6 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         [HttpGet]
         [Route("ordered")]
         [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
-        [Orderable(typeof(Employee))]
         public async Task<IActionResult> List_Ordered()
         {
             return Ok(await _dbContext.Employees
