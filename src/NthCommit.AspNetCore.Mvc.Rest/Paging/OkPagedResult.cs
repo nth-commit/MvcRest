@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NthCommit.AspNetCore.Mvc.Rest.Pageable
+namespace NthCommit.AspNetCore.Mvc.Rest.Paging
 {
     public class OkPagedResult : OkObjectResult
     {

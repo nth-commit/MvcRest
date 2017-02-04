@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using NthCommit.AspNetCore.Mvc.Rest.Extensions;
-using NthCommit.AspNetCore.Mvc.Rest.Pageable;
+using NthCommit.AspNetCore.Mvc.Rest.Paging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace NthCommit.AspNetCore.Mvc.Rest
         private const int DefaultDefaultPageSize = 10;
         private const int DefaultMaxPageSize = 50;
 
-        private PageRequest _pageRequest;
+        private RestPageQuery _pageRequest;
 
         public int MaximumPageSize { get; set; } = DefaultMaxPageSize;
 
@@ -72,8 +71,8 @@ namespace NthCommit.AspNetCore.Mvc.Rest
                 return;
             }
 
-            _pageRequest = new PageRequest(pageNumber, requestedPageSize);
-            restController.PageRequest = _pageRequest;
+            _pageRequest = new RestPageQuery(pageNumber, requestedPageSize);
+            restController.PageQuery = _pageRequest;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
@@ -90,6 +89,9 @@ namespace NthCommit.AspNetCore.Mvc.Rest
                 AddLinkHeader(context, okPagedResult);
             }
         }
+
+
+        #region Helpers
 
         private void AddTotalCountHeader(ActionExecutedContext context, OkPagedResult result)
         {
@@ -160,5 +162,7 @@ namespace NthCommit.AspNetCore.Mvc.Rest
 
             public string Url { get; set; }
         }
+
+        #endregion
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NthCommit.AspNetCore.Mvc.Rest.Extensions;
-using NthCommit.AspNetCore.Mvc.Rest.Includes;
+using NthCommit.AspNetCore.Mvc.Rest.Selecting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.Rest
 {
-    public class IncludableAttribute : Attribute, IActionFilter
+    public class SelectableAttribute : Attribute, IActionFilter
     {
         public void OnActionExecuting(ActionExecutingContext context)
         {
@@ -21,7 +21,7 @@ namespace NthCommit.AspNetCore.Mvc.Rest
             }
 
             var fields = context.HttpContext.Request.Query.GetQueryValues("fields");
-            restController.IncludeRequest = new IncludeRequest(fields);
+            restController.SelectQuery = new RestSelectQuery(fields);
         }
 
         public void OnActionExecuted(ActionExecutedContext context)

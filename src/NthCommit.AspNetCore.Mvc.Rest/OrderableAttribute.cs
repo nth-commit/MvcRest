@@ -31,11 +31,11 @@ namespace NthCommit.AspNetCore.Mvc.Rest
                 return;
             }
 
-            OrderRequest request = null;
+            RestOrderQuery request = null;
             var orderValue = context.HttpContext.Request.Query.FirstOrDefaultWithKey("order") ?? string.Empty;
             if (string.IsNullOrWhiteSpace(orderValue))
             {
-                request = new OrderRequest(new List<OrderDescriptor>());
+                request = new RestOrderQuery(new List<OrderDescriptor>());
             }
             else
             {
@@ -56,10 +56,10 @@ namespace NthCommit.AspNetCore.Mvc.Rest
                     return;
                 }
 
-                request = new OrderRequest(descriptors.ToList());
+                request = new RestOrderQuery(descriptors.ToList());
             }
             
-            restController.OrderRequest = request;
+            restController.OrderQuery = request;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)

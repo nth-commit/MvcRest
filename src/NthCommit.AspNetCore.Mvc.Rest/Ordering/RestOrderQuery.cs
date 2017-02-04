@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.Rest.Ordering
 {
-    public class OrderRequest
+    public class RestOrderQuery
     {
         public IEnumerable<OrderDescriptor> OrderDescriptors { get; private set; }
 
-        public OrderRequest(List<OrderDescriptor> orderDescriptors)
+        public RestOrderQuery(List<OrderDescriptor> orderDescriptors)
         {
             OrderDescriptors = orderDescriptors;
         }

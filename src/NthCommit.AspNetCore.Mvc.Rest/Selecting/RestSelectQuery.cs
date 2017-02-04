@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NthCommit.AspNetCore.Mvc.Rest.Includes
+namespace NthCommit.AspNetCore.Mvc.Rest.Selecting
 {
-    public class IncludeRequest
+    public class RestSelectQuery
     {
         public IEnumerable<string> Properties { get; private set; }
 
-        internal IncludeRequest(IEnumerable<string> properties)
+        internal RestSelectQuery(IEnumerable<string> properties)
         {
             Properties = properties.ToArray();
         }

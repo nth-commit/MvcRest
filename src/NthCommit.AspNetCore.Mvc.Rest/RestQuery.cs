@@ -1,6 +1,6 @@
-﻿using NthCommit.AspNetCore.Mvc.Rest.Includes;
-using NthCommit.AspNetCore.Mvc.Rest.Ordering;
-using NthCommit.AspNetCore.Mvc.Rest.Pageable;
+﻿using NthCommit.AspNetCore.Mvc.Rest.Ordering;
+using NthCommit.AspNetCore.Mvc.Rest.Paging;
+using NthCommit.AspNetCore.Mvc.Rest.Selecting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +10,10 @@ namespace NthCommit.AspNetCore.Mvc.Rest
 {
     public class RestQuery
     {
-        public OrderRequest OrderRequest { get; set; }
+        public RestOrderQuery OrderQuery { get; set; }
 
-        public IncludeRequest IncludeRequest { get; set; }
+        public RestSelectQuery SelectQuery { get; set; }
 
-        public PageRequest PageRequest { get; set; }
+        public RestPageQuery PageQuery { get; set; }
     }
 }

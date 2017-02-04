@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NthCommit.AspNetCore.Mvc.Rest.Includes;
 using NthCommit.AspNetCore.Mvc.Rest.Ordering;
-using NthCommit.AspNetCore.Mvc.Rest.Pageable;
+using NthCommit.AspNetCore.Mvc.Rest.Paging;
+using NthCommit.AspNetCore.Mvc.Rest.Selecting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,18 +20,18 @@ namespace NthCommit.AspNetCore.Mvc.Rest
             {
                 return new RestQuery()
                 {
-                    OrderRequest = OrderRequest,
-                    IncludeRequest = IncludeRequest,
-                    PageRequest = PageRequest
+                    OrderQuery = OrderQuery,
+                    SelectQuery = SelectQuery,
+                    PageQuery = PageQuery
                 };
             }
         }
 
-        public OrderRequest OrderRequest { get; set; }
+        public RestOrderQuery OrderQuery { get; set; }
 
-        public IncludeRequest IncludeRequest { get; set; }
+        public RestSelectQuery SelectQuery { get; set; }
 
-        public PageRequest PageRequest { get; set; }
+        public RestPageQuery PageQuery { get; set; }
 
         public OkPagedResult Ok(IEnumerable items, int totalItems)
         {

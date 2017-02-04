@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MvcRest.Samples.EntityFrameworkCore;
 using MvcRest.Samples.EntityFrameworkCore.Models;
 using NthCommit.AspNetCore.Mvc.Rest;
 using System;
@@ -24,7 +23,7 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         [HttpGet]
         [Route("")]
         [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
-        [Pageable(DefaultPageSize = 3, MaximumPageSize = 10), Orderable, Includable]
+        [Pageable(DefaultPageSize = 3, MaximumPageSize = 10), Orderable, Selectable]
         public async Task<IActionResult> List()
         {
             return Ok(
@@ -39,7 +38,7 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         public async Task<IActionResult> List_Paged()
         {
             return Ok(
-                await _dbContext.Employees.Page(PageRequest).ToListAsync(),
+                await _dbContext.Employees.Page(PageQuery).ToListAsync(),
                 await _dbContext.Employees.CountAsync());
         }
 
@@ -49,16 +48,16 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         [Orderable]
         public async Task<IActionResult> List_Ordered()
         {
-            return Ok(await _dbContext.Employees.Order(OrderRequest).ToListAsync());
+            return Ok(await _dbContext.Employees.Order(OrderQuery).ToListAsync());
         }
 
         [HttpGet]
-        [Route("includable")]
+        [Route("selectable")]
         [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
-        [Includable]
+        [Selectable]
         public async Task<IActionResult> List_Includable()
         {
-            return Ok(await _dbContext.Employees.ToListAsync());
+            return Ok(await _dbContext.Employees.Select(SelectQuery).ToListAsync());
         }
     }
 }
