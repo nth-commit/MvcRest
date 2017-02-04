@@ -55,7 +55,7 @@ namespace MvcRest.Samples.EntityFrameworkCore.Controllers
         [Route("selectable")]
         [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
         [Selectable]
-        public async Task<IActionResult> List_Includable()
+        public async Task<IActionResult> List_Selectable()
         {
             return Ok(await _dbContext.Employees.Select(SelectQuery).ToListAsync());
         }

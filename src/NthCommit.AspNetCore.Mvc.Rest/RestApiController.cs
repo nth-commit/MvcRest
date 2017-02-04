@@ -12,26 +12,18 @@ namespace NthCommit.AspNetCore.Mvc.Rest
 {
     public abstract class RestApiController : Controller
     {
-        public object Expand { get; set; }
-
-        public RestQuery Query
-        {
-            get
-            {
-                return new RestQuery()
-                {
-                    OrderQuery = OrderQuery,
-                    SelectQuery = SelectQuery,
-                    PageQuery = PageQuery
-                };
-            }
-        }
-
         public RestOrderQuery OrderQuery { get; set; }
 
         public RestSelectQuery SelectQuery { get; set; }
 
         public RestPageQuery PageQuery { get; set; }
+
+        public RestQuery Query => new RestQuery()
+        {
+            OrderQuery = OrderQuery,
+            SelectQuery = SelectQuery,
+            PageQuery = PageQuery
+        };
 
         public OkPagedResult Ok(IEnumerable items, int totalItems)
         {
