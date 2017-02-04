@@ -26,9 +26,7 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         [Pageable(DefaultPageSize = 3, MaximumPageSize = 10), Orderable, Selectable]
         public async Task<IActionResult> List()
         {
-            return Ok(
-                await _dbContext.Employees.Query(Query).ToListAsync(),
-                await _dbContext.Employees.CountAsync());
+            return Ok(await _dbContext.Employees.Query(Query).ToListAsync());
         }
 
         [HttpGet]
@@ -37,9 +35,7 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         [Pageable(DefaultPageSize = 3, MaximumPageSize = 10)]
         public async Task<IActionResult> List_Paged()
         {
-            return Ok(
-                await _dbContext.Employees.Page(PageQuery).ToListAsync(),
-                await _dbContext.Employees.CountAsync());
+            return Ok(await _dbContext.Employees.Page(PageQuery).ToListAsync());
         }
 
         [HttpGet]
@@ -52,10 +48,10 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         }
 
         [HttpGet]
-        [Route("selectable")]
+        [Route("selected")]
         [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
         [Selectable]
-        public async Task<IActionResult> List_Selectable()
+        public async Task<IActionResult> List_Selected()
         {
             return Ok(await _dbContext.Employees.Select(SelectQuery).ToListAsync());
         }

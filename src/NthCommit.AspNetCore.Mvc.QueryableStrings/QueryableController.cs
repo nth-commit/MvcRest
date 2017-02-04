@@ -24,10 +24,5 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             SelectQuery = SelectQuery,
             PageQuery = PageQuery
         };
-
-        public OkPagedResult Ok(IEnumerable items, int totalItems)
-        {
-            return new OkPagedResult(items, totalItems);
-        }
     }
 }
