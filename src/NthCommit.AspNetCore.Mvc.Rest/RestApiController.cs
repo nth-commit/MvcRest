@@ -12,8 +12,6 @@ namespace NthCommit.AspNetCore.Mvc.Rest
 {
     public abstract class RestApiController : Controller
     {
-        public object Filter { get; set; }
-
         public object Expand { get; set; }
 
         public OrderRequest OrderRequest { get; set; }
