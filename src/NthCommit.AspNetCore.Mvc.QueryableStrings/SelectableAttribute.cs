@@ -4,10 +4,8 @@ using NthCommit.AspNetCore.Mvc.QueryableStrings.Extensions;
 using NthCommit.AspNetCore.Mvc.QueryableStrings.Selecting;
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
@@ -49,8 +47,6 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
         #region Helpers
 
-        private ConcurrentDictionary<Type, PropertyInfo[]> _propertyInfoByType = new ConcurrentDictionary<Type, PropertyInfo[]>();
-
         private bool ArePropertiesValid(Type resolvedResourceType, IEnumerable<string> requestedPropertyNames)
         {
             if (resolvedResourceType == null)
@@ -58,8 +54,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
                 return true; // Nothing to validate against.
             }
 
-            var properties = _propertyInfoByType.GetOrAdd(resolvedResourceType, t => t.GetProperties());
-            var normalizedPropertyNames = properties.Select(p => p.Name.ToLowerInvariant());
+            var normalizedPropertyNames = resolvedResourceType.GetCachedProperties().Select(p => p.Name.ToLowerInvariant());
             var normalizedRequestedPropertyNames = requestedPropertyNames.Select(p => p.ToLowerInvariant());
 
             var invalidPropertyNames = normalizedRequestedPropertyNames.Except(normalizedPropertyNames);

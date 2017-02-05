@@ -10,7 +10,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings.Ordering
     {
         public static IOrderedQueryable<T> OrderBy<T>(
             this IQueryable<T> source,
-            OrderDescriptor orderDescriptor)
+            OrderQueryDescriptor orderDescriptor)
         {
             return source.OrderBy(orderDescriptor.PropertyName, orderDescriptor.IsAscending);
         }
@@ -25,7 +25,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings.Ordering
 
         public static IOrderedQueryable<T> ThenBy<T>(
             this IOrderedQueryable<T> source,
-            OrderDescriptor orderDescriptor)
+            OrderQueryDescriptor orderDescriptor)
         {
             return source.ThenBy(orderDescriptor.PropertyName, orderDescriptor.IsAscending);
         }
@@ -35,7 +35,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings.Ordering
             string propertyName,
             bool isAscending)
         {
-            return isAscending ? source.OrderBy(propertyName) : source.OrderByDescending(propertyName);
+            return isAscending ? source.ThenBy(propertyName) : source.ThenByDescending(propertyName);
         }
     }
 }

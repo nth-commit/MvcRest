@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings.Ordering
 {
-    public class OrderDescriptor
+    public class OrderQueryDescriptor
     {
         public string PropertyName { get; private set; }
 
         public bool IsAscending { get; private set; }
 
-        public OrderDescriptor(string propertyName, bool isAscending)
+        public OrderQueryDescriptor(string propertyName, bool isAscending)
         {
             PropertyName = propertyName;
             IsAscending = isAscending;

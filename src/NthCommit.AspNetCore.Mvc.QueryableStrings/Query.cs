@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NthCommit.AspNetCore.Mvc.QueryableStrings.Filtering;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 {
@@ -15,5 +16,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
         public SelectQuery SelectQuery { get; set; }
 
         public PageQuery PageQuery { get; set; }
+
+        public FilterQuery FilterQuery { get; set; }
     }
 }

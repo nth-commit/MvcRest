@@ -24,7 +24,7 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         [HttpGet]
         [Route("")]
         [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
-        [Pageable(DefaultPageSize = 3, MaximumPageSize = 10), Orderable, Selectable]
+        [Pageable(DefaultPageSize = 3, MaximumPageSize = 10), Orderable, Selectable, Filterable]
         public async Task<IActionResult> List()
         {
             return Ok(await _dbContext.Employees
@@ -80,11 +80,11 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         [HttpGet]
         [Route("filtered")]
         [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
-        [Filterable(nameof(Employee.FirstName), Mode = FilterMode.Whitelist)]
+        [Filterable]
         public async Task<IActionResult> List_Filtered()
         {
             return Ok(await _dbContext.Employees
-                .Select(SelectQuery)
+                .Filter(FilterQuery)
                 .ToListAsync());
         }
 

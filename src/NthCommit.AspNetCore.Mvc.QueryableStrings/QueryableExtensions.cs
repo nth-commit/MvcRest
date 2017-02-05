@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using NthCommit.AspNetCore.Mvc.QueryableStrings.Selecting;
+using NthCommit.AspNetCore.Mvc.QueryableStrings.Filtering;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 {
@@ -15,10 +16,26 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             this IQueryable<TResult> queryable,
             Query query)
         {
-            return queryable
-                .Order(query.OrderQuery)
-                .Page(query.PageQuery)
-                .Select(query.SelectQuery);
+            var typedResult = queryable;
+
+            if (query.FilterQuery != null)
+            {
+                typedResult = typedResult.Filter(query.FilterQuery);
+            }
+
+            if (query.OrderQuery != null)
+            {
+                typedResult = typedResult.Order(query.OrderQuery);
+            }
+
+            if (query.PageQuery != null)
+            {
+                typedResult = typedResult.Page(query.PageQuery);
+            }
+
+            return query.SelectQuery == null ?
+                typedResult.Cast<object>() :
+                typedResult.Select(query.SelectQuery);
         }
 
         public static IQueryable<TResult> Page<TResult>(
@@ -34,18 +51,32 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             this IQueryable<TResult> queryable,
             OrderQuery orderQuery)
         {
-            var orderDescriptors = orderQuery.OrderDescriptors;
-            if (orderDescriptors.Count() == 0)
+            var descriptors = orderQuery.Descriptors;
+            if (descriptors.Count() == 0)
             {
                 return queryable;
             }
 
-            var result = queryable.OrderBy(orderDescriptors.First());
-            foreach (var orderDescriptor in orderDescriptors.Skip(1))
+            var result = queryable.OrderBy(descriptors.First());
+            foreach (var orderDescriptor in descriptors.Skip(1))
             {
                 result = result.ThenBy(orderDescriptor);
             }
             return result;
+        }
+
+        public static IQueryable<TResult> Filter<TResult>(
+            this IQueryable<TResult> queryable,
+            FilterQuery filterQuery)
+        {
+            var descriptors = filterQuery.Descriptors;
+            if (descriptors.Count() == 0)
+            {
+                return queryable;
+            }
+
+            var whereStr = string.Join(" And ", descriptors.Select(d => $"{d.PropertyName}=\"{d.Value}\""));
+            return queryable.Where(whereStr);
         }
 
         public static IQueryable<object> Select<TResult>(

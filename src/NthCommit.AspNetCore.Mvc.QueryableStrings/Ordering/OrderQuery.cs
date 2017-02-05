@@ -8,11 +8,11 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings.Ordering
 {
     public class OrderQuery
     {
-        public IEnumerable<OrderDescriptor> OrderDescriptors { get; private set; }
+        public IEnumerable<OrderQueryDescriptor> Descriptors { get; private set; }
 
-        public OrderQuery(List<OrderDescriptor> orderDescriptors)
+        public OrderQuery(List<OrderQueryDescriptor> descriptors)
         {
-            OrderDescriptors = orderDescriptors;
+            Descriptors = descriptors;
         }
     }
 }

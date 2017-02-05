@@ -7,5 +7,11 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings.Filtering
 {
     public class FilterQuery
     {
+        public IEnumerable<FilterQueryDescriptor> Descriptors { get; private set; }
+
+        public FilterQuery(IEnumerable<FilterQueryDescriptor> descriptors)
+        {
+            Descriptors = descriptors.ToList();
+        }
     }
 }

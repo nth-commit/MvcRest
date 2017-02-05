@@ -4,10 +4,8 @@ using NthCommit.AspNetCore.Mvc.QueryableStrings.Extensions;
 using NthCommit.AspNetCore.Mvc.QueryableStrings.Ordering;
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
@@ -27,7 +25,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             var orderValue = context.HttpContext.Request.Query.FirstOrDefaultWithKey("orderby") ?? string.Empty;
             if (string.IsNullOrWhiteSpace(orderValue))
             {
-                request = new OrderQuery(new List<OrderDescriptor>());
+                request = new OrderQuery(new List<OrderQueryDescriptor>());
             }
             else
             {
@@ -39,7 +37,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
                         var descendingRequested = o.StartsWith("-");
                         var ascendingRequested = o.StartsWith("+");
                         var unsignedPropertyName = descendingRequested || ascendingRequested ? o.Substring(1) : o;
-                        return new OrderDescriptor(GetPropertyName(resolvedResourceType, unsignedPropertyName), !descendingRequested);
+                        return new OrderQueryDescriptor(GetPropertyName(resolvedResourceType, unsignedPropertyName), !descendingRequested);
                     });
 
                 if (descriptors.Any(a => a.PropertyName == null))
@@ -60,18 +58,16 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
 
         #region Helpers
-
-        private static ConcurrentDictionary<Type, PropertyInfo[]> _propertyInfoByType = new ConcurrentDictionary<Type, PropertyInfo[]>();
-
+        
         private string GetPropertyName(Type resolvedResourceType, string requestedPropertyName)
         {
             if (resolvedResourceType == null)
             {
                 throw new Exception("Unable to resolve type of response value.");
             }
-
-            var properties = _propertyInfoByType.GetOrAdd(resolvedResourceType, t => t.GetProperties());
-            var matchedPropertyName = properties
+            
+            var matchedPropertyName = resolvedResourceType
+                .GetCachedProperties()
                 .Where(p => p.Name.ToLowerInvariant() == requestedPropertyName.ToLowerInvariant())
                 .Select(p => p.Name)
                 .FirstOrDefault();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NthCommit.AspNetCore.Mvc.QueryableStrings.Filtering;
 using NthCommit.AspNetCore.Mvc.QueryableStrings.Ordering;
 using NthCommit.AspNetCore.Mvc.QueryableStrings.Paging;
 using NthCommit.AspNetCore.Mvc.QueryableStrings.Selecting;
@@ -18,11 +19,14 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
         public PageQuery PageQuery { get; set; }
 
+        public FilterQuery FilterQuery { get; set; }
+
         public Query Query => new Query()
         {
             OrderQuery = OrderQuery,
             SelectQuery = SelectQuery,
-            PageQuery = PageQuery
+            PageQuery = PageQuery,
+            FilterQuery = FilterQuery
         };
     }
 }
