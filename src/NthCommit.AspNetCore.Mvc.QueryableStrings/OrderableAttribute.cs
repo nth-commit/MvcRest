@@ -32,7 +32,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             }
 
             OrderQuery request = null;
-            var orderValue = context.HttpContext.Request.Query.FirstOrDefaultWithKey("order") ?? string.Empty;
+            var orderValue = context.HttpContext.Request.Query.FirstOrDefaultWithKey("orderby") ?? string.Empty;
             if (string.IsNullOrWhiteSpace(orderValue))
             {
                 request = new OrderQuery(new List<OrderDescriptor>());
@@ -69,7 +69,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
         #region Helpers
 
-        private ConcurrentDictionary<Type, PropertyInfo[]> _propertyInfoByType = new ConcurrentDictionary<Type, PropertyInfo[]>();
+        private static ConcurrentDictionary<Type, PropertyInfo[]> _propertyInfoByType = new ConcurrentDictionary<Type, PropertyInfo[]>();
 
         private string GetPropertyName(ActionExecutingContext context, string requestedPropertyName)
         {
@@ -129,30 +129,13 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
         {
             if (Type == null)
             {
-                var producesResponseTypeAttr = context.Filters
-                    .Select(f => f as ProducesResponseTypeAttribute)
-                    .Where(f => f != null)
-                    .FirstOrDefault();
-
-                if (producesResponseTypeAttr == null)
+                var valueType = context.GetValueType();
+                if (valueType == null)
                 {
                     return null;
                 }
 
-                var valueType = producesResponseTypeAttr.Type;
-                Type enumerableType = null;
-                if (IsGenericIEnumerable(valueType))
-                {
-                    enumerableType = valueType;
-                }
-                else
-                {
-                    enumerableType = valueType
-                        .GetInterfaces()
-                        .Where(IsGenericIEnumerable)
-                        .FirstOrDefault();
-                }
-
+                Type enumerableType = valueType.GetGenericIEnumerableType();
                 if (enumerableType == null)
                 {
                     return null;

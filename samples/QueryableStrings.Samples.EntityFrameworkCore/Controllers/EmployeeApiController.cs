@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NthCommit.AspNetCore.Mvc.QueryableStrings.Filtering;
 
 namespace QueryableStrings.EntityFrameworkCore.Controllers
 {
@@ -26,7 +27,21 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         [Pageable(DefaultPageSize = 3, MaximumPageSize = 10), Orderable, Selectable]
         public async Task<IActionResult> List()
         {
-            return Ok(await _dbContext.Employees.Query(Query).ToListAsync());
+            return Ok(await _dbContext.Employees
+                .Query(Query)
+                .ToListAsync());
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(Employee), 200)]
+        [Selectable]
+        public async Task<IActionResult> Get(int id)
+        {
+            return Ok(await _dbContext.Employees
+                .Where(e => e.Id == id)
+                .Query(Query)
+                .FirstOrDefaultAsync());
         }
 
         [HttpGet]
@@ -35,7 +50,9 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         [Pageable(DefaultPageSize = 3, MaximumPageSize = 10)]
         public async Task<IActionResult> List_Paged()
         {
-            return Ok(await _dbContext.Employees.Page(PageQuery).ToListAsync());
+            return Ok(await _dbContext.Employees
+                .Page(PageQuery)
+                .ToListAsync());
         }
 
         [HttpGet]
@@ -44,7 +61,9 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         [Orderable]
         public async Task<IActionResult> List_Ordered()
         {
-            return Ok(await _dbContext.Employees.Order(OrderQuery).ToListAsync());
+            return Ok(await _dbContext.Employees
+                .Order(OrderQuery)
+                .ToListAsync());
         }
 
         [HttpGet]
@@ -53,7 +72,20 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         [Selectable]
         public async Task<IActionResult> List_Selected()
         {
-            return Ok(await _dbContext.Employees.Select(SelectQuery).ToListAsync());
+            return Ok(await _dbContext.Employees
+                .Select(SelectQuery)
+                .ToListAsync());
+        }
+
+        [HttpGet]
+        [Route("filtered")]
+        [ProducesResponseType(typeof(IEnumerable<Employee>), 200)]
+        [Filterable(nameof(Employee.FirstName), Mode = FilterMode.Whitelist)]
+        public async Task<IActionResult> List_Filtered()
+        {
+            return Ok(await _dbContext.Employees
+                .Select(SelectQuery)
+                .ToListAsync());
         }
 
         [HttpGet]

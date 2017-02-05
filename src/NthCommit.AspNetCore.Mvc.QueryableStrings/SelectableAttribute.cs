@@ -117,7 +117,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
                 }
 
                 var valueType = producesResponseTypeAttr.Type;
-                var enumerableType = GetTypeAsGenericIEnumerable(valueType);
+                var enumerableType = valueType.GetGenericIEnumerableType();
                 if (enumerableType == null)
                 {
                     return valueType;
@@ -127,26 +127,6 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             }
 
             return Type;
-        }
-        
-        private Type GetTypeAsGenericIEnumerable(Type type)
-        {
-            if (IsGenericIEnumerable(type))
-            {
-                return type;
-            }
-            else
-            {
-                return type
-                    .GetInterfaces()
-                    .Where(IsGenericIEnumerable)
-                    .FirstOrDefault();
-            }
-        }
-
-        private bool IsGenericIEnumerable(Type type)
-        {
-            return type.IsGenericType == true && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
         }
 
         private dynamic CreateResult(object inputResult, IEnumerable<string> propertyNames)
