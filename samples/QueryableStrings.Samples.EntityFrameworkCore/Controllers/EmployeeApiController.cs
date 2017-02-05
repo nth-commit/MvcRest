@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NthCommit.AspNetCore.Mvc.QueryableStrings.Filtering;
 
 namespace QueryableStrings.EntityFrameworkCore.Controllers
 {
