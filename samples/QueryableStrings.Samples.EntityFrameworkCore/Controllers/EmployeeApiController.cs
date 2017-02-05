@@ -55,5 +55,17 @@ namespace QueryableStrings.EntityFrameworkCore.Controllers
         {
             return Ok(await _dbContext.Employees.Select(SelectQuery).ToListAsync());
         }
+
+        [HttpGet]
+        [Route("selected/{id}")]
+        [ProducesResponseType(typeof(Employee), 200)]
+        [Selectable]
+        public async Task<IActionResult> Get_Selected(int id)
+        {
+            return Ok(await _dbContext.Employees
+                .Where(e => e.Id == id)
+                .Select(SelectQuery)
+                .FirstOrDefaultAsync());
+        }
     }
 }

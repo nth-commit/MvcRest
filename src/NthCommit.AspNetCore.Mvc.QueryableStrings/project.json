@@ -1,5 +1,18 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "0.1.0",
+  "description": "Build up IQueryables with common query string parameters.",
+  "authors": [ "Fry-White, Michael" ],
+
+  "packOptions": {
+    "repository": {
+      "url": "https://github.com/nth-commit/QueryableStrings",
+      "type": "git"
+    },
+    "owners": [
+      "Fry-White, Michael"
+    ],
+    "licenseUrl": "https://opensource.org/licenses/MIT"
+  },
 
   "dependencies": {
     "Microsoft.AspNetCore.Mvc": "1.0.1",

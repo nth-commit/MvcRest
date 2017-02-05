@@ -52,7 +52,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             this IQueryable<TResult> queryable,
             SelectQuery selectQuery)
         {
-            var properties = selectQuery.Properties;
+            var properties = selectQuery.PropertyNames;
             if (properties.Count() == 0)
             {
                 return queryable.Cast<object>();

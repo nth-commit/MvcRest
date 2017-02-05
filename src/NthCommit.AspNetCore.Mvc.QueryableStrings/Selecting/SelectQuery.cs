@@ -8,11 +8,11 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings.Selecting
 {
     public class SelectQuery
     {
-        public IEnumerable<string> Properties { get; private set; }
+        public IEnumerable<string> PropertyNames { get; private set; }
 
-        internal SelectQuery(IEnumerable<string> properties)
+        internal SelectQuery(IEnumerable<string> propertyNames)
         {
-            Properties = properties.ToArray();
+            PropertyNames = propertyNames.ToArray();
         }
     }
 }
