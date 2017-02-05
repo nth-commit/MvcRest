@@ -36,7 +36,28 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            
+            var queryableController = context.Controller as QueryableController;
+            if (queryableController == null)
+            {
+                return;
+            }
+
+            var propertyNames = queryableController.SelectQuery.PropertyNames;
+            if (propertyNames.Count() == 0)
+            {
+                return;
+            }
+
+            var okObjectResult = context.Result as OkObjectResult;
+            if (okObjectResult != null)
+            {
+                var value = okObjectResult.Value;
+                var enumerable = value as IEnumerable<object>;
+                var newValue = enumerable == null ?
+                    CreateResult(value, propertyNames) :
+                    enumerable.Select(o => CreateResult(o, propertyNames));
+                okObjectResult.Value = newValue;
+            }
         }
 
 
@@ -126,6 +147,14 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
         private bool IsGenericIEnumerable(Type type)
         {
             return type.IsGenericType == true && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+        }
+
+        private dynamic CreateResult(object inputResult, IEnumerable<string> propertyNames)
+        {
+            // TODO: Performance?
+            return inputResult.GetType().GetProperties()
+                .Where(p => propertyNames.Contains(p.Name.ToLowerInvariant()))
+                .ToDictionary(p => p.Name, p => p.GetValue(inputResult));
         }
 
         #endregion
