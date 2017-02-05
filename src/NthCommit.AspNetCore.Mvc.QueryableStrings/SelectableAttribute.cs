@@ -12,14 +12,12 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 {
-    public class SelectableAttribute : QueryFilterAttribute, IActionFilter
+    public class SelectableAttribute : TypedQueryFilterAttribute
     {
-        public Type Type { get; set; }
-
-        protected override void OnActionExecuting(ActionExecutingContext context, QueryableController controller)
+        protected override void OnActionExecuting(ActionExecutingContext context, QueryableController controller, Type resolvedResourceType)
         {
             var propertyNames = context.HttpContext.Request.Query.GetQueryValues("fields");
-            if (!ArePropertiesValid(context, propertyNames))
+            if (!ArePropertiesValid(resolvedResourceType, propertyNames))
             {
                 context.Result = new BadRequestResult();
                 return;
@@ -28,7 +26,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             controller.SelectQuery = new SelectQuery(propertyNames);
         }
 
-        protected override void OnActionExecuted(ActionExecutedContext context, QueryableController controller)
+        protected override void OnActionExecuted(ActionExecutedContext context, QueryableController controller, Type resolvedResourceType)
         {
             var propertyNames = controller.SelectQuery.PropertyNames;
             if (propertyNames.Count() == 0)
@@ -53,63 +51,19 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
         private ConcurrentDictionary<Type, PropertyInfo[]> _propertyInfoByType = new ConcurrentDictionary<Type, PropertyInfo[]>();
 
-        private bool ArePropertiesValid(ActionExecutingContext context, IEnumerable<string> requestedPropertyNames)
+        private bool ArePropertiesValid(Type resolvedResourceType, IEnumerable<string> requestedPropertyNames)
         {
-            var resourceType = GetResourceType(context);
-            if (resourceType == null)
+            if (resolvedResourceType == null)
             {
                 return true; // Nothing to validate against.
             }
 
-            var properties = _propertyInfoByType.GetOrAdd(resourceType, t => t.GetProperties());
+            var properties = _propertyInfoByType.GetOrAdd(resolvedResourceType, t => t.GetProperties());
             var normalizedPropertyNames = properties.Select(p => p.Name.ToLowerInvariant());
             var normalizedRequestedPropertyNames = requestedPropertyNames.Select(p => p.ToLowerInvariant());
 
             var invalidPropertyNames = normalizedRequestedPropertyNames.Except(normalizedPropertyNames);
             return invalidPropertyNames.Count() == 0;
-        }
-
-        private object _resolvedTypeLock = new object();
-        private Type _resolvedResourceType = null;
-        private bool _isTypeResolved = false;
-
-        private Type GetResourceType(ActionExecutingContext context)
-        {
-            if (!_isTypeResolved)
-            {
-                lock (_resolvedTypeLock)
-                {
-                    if (!_isTypeResolved)
-                    {
-                        _resolvedResourceType = ResolveResourceType(context);
-                        _isTypeResolved = true;
-                    }
-                }
-            }
-
-            return _resolvedResourceType;
-        }
-
-        private Type ResolveResourceType(ActionExecutingContext context)
-        {
-            if (Type == null)
-            {
-                var valueType = context.GetValueType();
-                if (valueType == null)
-                {
-                    return null;
-                }
-                
-                var enumerableType = valueType.GetGenericIEnumerableType();
-                if (enumerableType == null)
-                {
-                    return valueType;
-                }
-
-                return enumerableType.GetGenericArguments().FirstOrDefault();
-            }
-
-            return Type;
         }
 
         private dynamic CreateResult(object inputResult, IEnumerable<string> propertyNames)

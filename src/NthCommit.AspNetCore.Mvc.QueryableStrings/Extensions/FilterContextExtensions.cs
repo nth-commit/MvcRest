@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings.Extensions
 {
-    public static class ActionExecutingContextExtensions
+    public static class FilterContextExtensions
     {
 
-        public static Type GetValueType(this ActionExecutingContext context)
+        public static Type GetValueType(this FilterContext context)
         {
             var producesResponseTypeAttr = context.Filters
                 .Select(f => f as ProducesResponseTypeAttribute)

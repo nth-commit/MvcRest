@@ -12,18 +12,16 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 {
-    public class OrderableAttribute : QueryFilterAttribute, IActionFilter
+    public class OrderableAttribute : TypedQueryFilterAttribute, IActionFilter
     {
         private readonly IEnumerable<string> _allowedProperties;
-
-        public Type Type { get; set; }
 
         public OrderableAttribute(params string[] allowedProperties)
         {
             _allowedProperties = allowedProperties;
         }
 
-        protected override void OnActionExecuting(ActionExecutingContext context, QueryableController controller)
+        protected override void OnActionExecuting(ActionExecutingContext context, QueryableController controller, Type resolvedResourceType)
         {
             OrderQuery request = null;
             var orderValue = context.HttpContext.Request.Query.FirstOrDefaultWithKey("orderby") ?? string.Empty;
@@ -41,7 +39,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
                         var descendingRequested = o.StartsWith("-");
                         var ascendingRequested = o.StartsWith("+");
                         var unsignedPropertyName = descendingRequested || ascendingRequested ? o.Substring(1) : o;
-                        return new OrderDescriptor(GetPropertyName(context, unsignedPropertyName), !descendingRequested);
+                        return new OrderDescriptor(GetPropertyName(resolvedResourceType, unsignedPropertyName), !descendingRequested);
                     });
 
                 if (descriptors.Any(a => a.PropertyName == null))
@@ -56,7 +54,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             controller.OrderQuery = request;
         }
 
-        protected override void OnActionExecuted(ActionExecutedContext context, QueryableController controller)
+        protected override void OnActionExecuted(ActionExecutedContext context, QueryableController controller, Type resolvedResourceType)
         {
         }
 
@@ -65,10 +63,14 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
         private static ConcurrentDictionary<Type, PropertyInfo[]> _propertyInfoByType = new ConcurrentDictionary<Type, PropertyInfo[]>();
 
-        private string GetPropertyName(ActionExecutingContext context, string requestedPropertyName)
+        private string GetPropertyName(Type resolvedResourceType, string requestedPropertyName)
         {
-            var type = GetResolvedType(context);
-            var properties = _propertyInfoByType.GetOrAdd(type, t => t.GetProperties());
+            if (resolvedResourceType == null)
+            {
+                throw new Exception("Unable to resolve type of response value.");
+            }
+
+            var properties = _propertyInfoByType.GetOrAdd(resolvedResourceType, t => t.GetProperties());
             var matchedPropertyName = properties
                 .Where(p => p.Name.ToLowerInvariant() == requestedPropertyName.ToLowerInvariant())
                 .Select(p => p.Name)
@@ -87,60 +89,6 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
             return matchedPropertyName;
         }
-
-        private object _resolvedTypeLock = new object();
-        private Type _resolvedType = null;
-        private bool? _isResolvedTypeInvalid = null;
-
-        private Type GetResolvedType(ActionExecutingContext context)
-        {
-            if (!HasResolvedType())
-            {
-                lock (_resolvedTypeLock)
-                {
-                    if (!HasResolvedType())
-                    {
-                        _resolvedType = ResolveType(context);
-                        if (_resolvedType == null)
-                        {
-                            _isResolvedTypeInvalid = true;
-                        }
-                    }
-                }
-            }
-
-            if (_isResolvedTypeInvalid.GetValueOrDefault())
-            {
-                throw new Exception("ProducesResponseType must return value of type IEnumerable<>");
-            }
-
-            return _resolvedType;            
-        }
-
-        private bool HasResolvedType() => _resolvedType != null || _isResolvedTypeInvalid.HasValue;
-
-        private Type ResolveType(ActionExecutingContext context)
-        {
-            if (Type == null)
-            {
-                var valueType = context.GetValueType();
-                if (valueType == null)
-                {
-                    return null;
-                }
-
-                Type enumerableType = valueType.GetGenericIEnumerableType();
-                if (enumerableType == null)
-                {
-                    return null;
-                }
-
-                return enumerableType.GetGenericArguments().FirstOrDefault();
-            }
-            return Type;
-        }
-
-        
 
         #endregion
     }
