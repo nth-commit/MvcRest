@@ -12,18 +12,12 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 {
-    public class SelectableAttribute : Attribute, IActionFilter
+    public class SelectableAttribute : QueryFilterAttribute, IActionFilter
     {
         public Type Type { get; set; }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        protected override void OnActionExecuting(ActionExecutingContext context, QueryableController controller)
         {
-            var queryableController = context.Controller as QueryableController;
-            if (queryableController == null)
-            {
-                return;
-            }
-
             var propertyNames = context.HttpContext.Request.Query.GetQueryValues("fields");
             if (!ArePropertiesValid(context, propertyNames))
             {
@@ -31,18 +25,12 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
                 return;
             }
 
-            queryableController.SelectQuery = new SelectQuery(propertyNames);
+            controller.SelectQuery = new SelectQuery(propertyNames);
         }
 
-        public void OnActionExecuted(ActionExecutedContext context)
+        protected override void OnActionExecuted(ActionExecutedContext context, QueryableController controller)
         {
-            var queryableController = context.Controller as QueryableController;
-            if (queryableController == null)
-            {
-                return;
-            }
-
-            var propertyNames = queryableController.SelectQuery.PropertyNames;
+            var propertyNames = controller.SelectQuery.PropertyNames;
             if (propertyNames.Count() == 0)
             {
                 return;
@@ -106,17 +94,12 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
         {
             if (Type == null)
             {
-                var producesResponseTypeAttr = context.Filters
-                    .Select(f => f as ProducesResponseTypeAttribute)
-                    .Where(f => f != null)
-                    .FirstOrDefault();
-
-                if (producesResponseTypeAttr == null)
+                var valueType = context.GetValueType();
+                if (valueType == null)
                 {
                     return null;
                 }
-
-                var valueType = producesResponseTypeAttr.Type;
+                
                 var enumerableType = valueType.GetGenericIEnumerableType();
                 if (enumerableType == null)
                 {

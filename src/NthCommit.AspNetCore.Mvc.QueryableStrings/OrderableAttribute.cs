@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 {
-    public class OrderableAttribute : Attribute, IActionFilter
+    public class OrderableAttribute : QueryFilterAttribute, IActionFilter
     {
         private readonly IEnumerable<string> _allowedProperties;
 
@@ -23,14 +23,8 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             _allowedProperties = allowedProperties;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        protected override void OnActionExecuting(ActionExecutingContext context, QueryableController controller)
         {
-            var queryableController = context.Controller as QueryableController;
-            if (queryableController == null)
-            {
-                return;
-            }
-
             OrderQuery request = null;
             var orderValue = context.HttpContext.Request.Query.FirstOrDefaultWithKey("orderby") ?? string.Empty;
             if (string.IsNullOrWhiteSpace(orderValue))
@@ -58,11 +52,11 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
                 request = new OrderQuery(descriptors.ToList());
             }
-            
-            queryableController.OrderQuery = request;
+
+            controller.OrderQuery = request;
         }
 
-        public void OnActionExecuted(ActionExecutedContext context)
+        protected override void OnActionExecuted(ActionExecutedContext context, QueryableController controller)
         {
         }
 
@@ -146,10 +140,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
             return Type;
         }
 
-        private bool IsGenericIEnumerable(Type type)
-        {
-            return type.IsGenericType == true && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
-        }
+        
 
         #endregion
     }

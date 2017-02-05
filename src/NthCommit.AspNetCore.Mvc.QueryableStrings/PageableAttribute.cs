@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 {
-    public class PageableAttribute : Attribute, IActionFilter
+    public class PageableAttribute : QueryFilterAttribute, IActionFilter
     {
         private const string DefaultPageNumberKey = "page";
         private const string DefaultPageSizeKey = "page-size";
@@ -27,15 +27,8 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
 
         public string PageSizeKey { get; set; } = DefaultPageSizeKey;
 
-
-        public void OnActionExecuting(ActionExecutingContext context)
+        protected override void OnActionExecuting(ActionExecutingContext context, QueryableController controller)
         {
-            var queryableController = context.Controller as QueryableController;
-            if (queryableController == null)
-            {
-                return;
-            }
-
             int pageNumber;
             var pageNumberStr = context.HttpContext.Request.Query.FirstOrDefaultWithKey(DefaultPageNumberKey);
             if (string.IsNullOrWhiteSpace(pageNumberStr))
@@ -55,7 +48,7 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
                 context.Result = new BadRequestResult();
                 return;
             }
-            
+
             int requestedPageSize = DefaultPageSize;
             var requestedPageSizeStr = context.HttpContext.Request.Query.FirstOrDefaultWithKey(DefaultPageSizeKey);
             if (!string.IsNullOrWhiteSpace(requestedPageSizeStr))
@@ -68,11 +61,11 @@ namespace NthCommit.AspNetCore.Mvc.QueryableStrings
                 context.Result = new BadRequestResult();
                 return;
             }
-            
-            queryableController.PageQuery = new PageQuery(pageNumber, requestedPageSize);
+
+            controller.PageQuery = new PageQuery(pageNumber, requestedPageSize);
         }
 
-        public void OnActionExecuted(ActionExecutedContext context)
+        protected override void OnActionExecuted(ActionExecutedContext context, QueryableController controller)
         {
         }
     }
